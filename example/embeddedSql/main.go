@@ -54,7 +54,7 @@ func main() {
 
 	fmt.Println("Run insert statement:")
 	var stmtInsert *sql.Stmt
-	if stmtInsert, err = queryrepo.Prepare(db, *r, "demo", "insert"); err != nil {
+	if stmtInsert, err = queryrepo.Prepare(db, r, "demo", "insert"); err != nil {
 		panic(err)
 	}
 
@@ -67,7 +67,7 @@ func main() {
 	fmt.Println("")
 	fmt.Println("Run list statement:")
 	var stmtQuery *sql.Stmt
-	if stmtQuery, err = queryrepo.Prepare(db, *r, "demo", "list"); err != nil {
+	if stmtQuery, err = queryrepo.Prepare(db, r, "demo", "list"); err != nil {
 		fmt.Println("Error preparing statement")
 	}
 
