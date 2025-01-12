@@ -24,8 +24,8 @@ import github.com/jantytgat/go -sql-queryrepo
 > The root folder embedded in the application cannot have nested directories.  
 > This means that the directory structure is limited to 1 level of collections, each containing a set of text files with
 > a ```.sql``` extension.
-
-Files with another extension will fail to load!
+>
+> Files with another extension will fail to load!
 
 Let's assume to following directory structure in an embedded filesystem:
 
