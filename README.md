@@ -20,7 +20,7 @@ go get github.com/jantytgat/go-sql-queryrepo
 
 ### Import
 ```go
-import github.com/jantytgat/go -sql-queryrepo
+import github.com/jantytgat/go-sql-queryrepo
 ```
 
 ### Embed assets containing queries.
