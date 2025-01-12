@@ -94,7 +94,13 @@ panic(err)
 ## Prepared statements
 
 We also provide the means to create prepared statements for the queries, either with or without using a repository, as
-long as a ```Preparer``` is passed into the functions.  
+long as a ```Preparer``` is passed into the functions.
+
+```go
+type Preparer interface {
+Prepare(query string) (*sql.Stmt, error)
+}
+```
 For example:
 
 - *sql.Db
