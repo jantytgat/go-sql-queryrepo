@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.18.1
-	github.com/jantytgat/go-sql-queryrepo v0.1.2
+	github.com/jantytgat/go-sql-queryrepo v0.1.3
 )
 
 require (
