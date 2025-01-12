@@ -1,0 +1,3 @@
+INSERT INTO demo (name)
+VALUES (?)
+RETURNING id
