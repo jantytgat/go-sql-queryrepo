@@ -102,7 +102,7 @@ func loadFilesFromDir(f fs.FS, rootPath, dirName string) (collection, error) {
 		}
 
 		var contents []byte
-		if contents, err = fs.ReadFile(f, filepath.Join(dirName, file.Name())); err != nil {
+		if contents, err = fs.ReadFile(f, filepath.Join(fullPath, file.Name())); err != nil {
 			return c, fmt.Errorf("failed to read file %s from directory %s: %w", file.Name(), fullPath, err)
 		}
 
