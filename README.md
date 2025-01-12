@@ -8,6 +8,8 @@ application.
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/jantytgat/go-sql-queryrepo.svg)](https://pkg.go.dev/github.com/jantytgat/go-sql-queryrepo)
 
+---
+
 ## Basics
 
 ### Add the package to your project
