@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -106,7 +107,7 @@ func loadFilesFromDir(f fs.FS, rootPath, dirName string) (collection, error) {
 			return c, fmt.Errorf("failed to read file %s from directory %s: %w", file.Name(), fullPath, err)
 		}
 
-		if err = c.add(dirName, string(contents)); err != nil {
+		if err = c.add(strings.TrimSuffix(file.Name(), filepath.Ext(file.Name())), string(contents)); err != nil {
 			return c, err
 		}
 	}
