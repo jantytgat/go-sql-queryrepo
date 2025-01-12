@@ -6,9 +6,7 @@ You can either choose to load all queries into a repository, or load them from a
 The main intention is to embed a directory structure into the binary as ```embed.FS```, which can then used in the
 application.
 
-Two examples are available in the [example](https://github.com/jantytgat/go-sql-queryrepo/tree/main/example) directory:
-- embbededSqlWithRepository
-- embeddedSqlWithoutRepository
+[![Go Reference](https://pkg.go.dev/badge/github.com/jantytgat/go-sql-queryrepo.svg)](https://pkg.go.dev/github.com/jantytgat/go-sql-queryrepo)
 
 ## Basics
 
@@ -106,6 +104,11 @@ For example:
 - *sql.Db
 - *sql.Tx
 
+```go
+func Prepare[T Preparer](t T, r *Repository, collectionName, queryName string) (*sql.Stmt, error) {}
+func PrepareFromFs[T Preparer](t T, f fs.FS, rootPath, collectionName, queryName string) (*sql.Stmt, error) {}
+```
+
 ### With repository
 
 ```go
@@ -123,3 +126,8 @@ if createStmt, err = queryrepo.PrepareFromFs(db, f, "assets/statements", "collec
     panic(err)
 }
 ```
+
+## Examples
+Two examples are available in the [example](https://github.com/jantytgat/go-sql-queryrepo/tree/main/example) directory:
+- embbededSqlWithRepository
+- embeddedSqlWithoutRepository
