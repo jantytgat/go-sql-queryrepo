@@ -20,7 +20,8 @@ go get github.com/jantytgat/go-sql-queryrepo
 
 ### Import
 Next, you can manually add the import statement to your ```.go```-file, or have it added automatically when using it.
-```go
+
+```text
 import github.com/jantytgat/go-sql-queryrepo
 ```
 
