@@ -5,47 +5,80 @@ import (
 	"fmt"
 	"io/fs"
 	"path/filepath"
-
-	"gopkg.in/yaml.v3"
+	"sync"
 )
 
-func NewFromFs(fsys fs.FS) (*Repository, error) {
-	repo := New()
-
-	var err error
-	var files []fs.DirEntry
-	if files, err = fs.ReadDir(fsys, "."); err != nil {
-		return nil, err
+func NewFromFs(fsys fs.FS, rootPath string) (*Repository, error) {
+	repo := &Repository{
+		queries: make(map[string]collection),
 	}
-	return repo, loadStatements(repo, ".", fsys, files)
+
+	return repo, loadFromFs(repo, fsys, rootPath)
 }
 
-func loadStatements(r *Repository, rootPath string, filesystem fs.FS, files []fs.DirEntry) error {
+type Repository struct {
+	queries map[string]collection
+	mux     sync.Mutex
+}
+
+func (r *Repository) add(c collection) error {
+	r.mux.Lock()
+	defer r.mux.Unlock()
+
+	if _, ok := r.queries[c.name]; ok {
+		return fmt.Errorf("statement %s already exists", c.name)
+	}
+	r.queries[c.name] = c
+	return nil
+}
+
+func (r *Repository) DbPrepare(db *sql.DB, collectionName, statementName string) (*sql.Stmt, error) {
 	var err error
+	var statement string
+
+	if statement, err = r.Get(collectionName, statementName); err != nil {
+		return nil, err
+	}
+
+	return db.Prepare(statement)
+}
+
+func (r *Repository) Get(collection, query string) (string, error) {
+	r.mux.Lock()
+	defer r.mux.Unlock()
+
+	if s, ok := r.queries[collection]; ok {
+		return s.get(query)
+	}
+	return "", fmt.Errorf("collection %s not found", collection)
+}
+
+func (r *Repository) TxPrepare(tx *sql.Tx, collectionName, statementName string) (*sql.Stmt, error) {
+	var err error
+	var statement string
+
+	if statement, err = r.Get(collectionName, statementName); err != nil {
+		return nil, err
+	}
+
+	return tx.Prepare(statement)
+}
+
+func loadFromFs(r *Repository, f fs.FS, rootPath string) error {
+	var err error
+	var files []fs.DirEntry
+	if files, err = fs.ReadDir(f, rootPath); err != nil {
+		return err
+	}
 
 	for _, file := range files {
 		if file.IsDir() {
-			var subFiles []fs.DirEntry
-			if subFiles, err = fs.ReadDir(filesystem, filepath.Join(rootPath, file.Name())); err != nil {
-				return err
-			}
-			if err = loadStatements(r, filepath.Join(rootPath, file.Name()), filesystem, subFiles); err != nil {
-				return err
-			}
-		} else {
-			var contents []byte
-			if contents, err = fs.ReadFile(filesystem, filepath.Join(rootPath, file.Name())); err != nil {
-				fmt.Println("Error reading file", file.Name())
+			var c collection
+			if c, err = loadFilesFromDir(f, rootPath, file.Name()); err != nil {
 				return err
 			}
 
-			var fileStatements = Statements{}
-			if err = yaml.Unmarshal(contents, &fileStatements); err != nil {
-				fmt.Println("Error parsing file", file.Name())
-				return err
-			}
-
-			if err = r.Add(fileStatements); err != nil {
+			if err = r.add(c); err != nil {
 				return err
 			}
 		}
@@ -53,49 +86,29 @@ func loadStatements(r *Repository, rootPath string, filesystem fs.FS, files []fs
 	return nil
 }
 
-func New() *Repository {
-	return &Repository{
-		statements: make(map[string]Statements),
-	}
-}
-
-type Repository struct {
-	statements map[string]Statements
-}
-
-func (c *Repository) Add(statements Statements) error {
-	if _, ok := c.statements[statements.Name]; ok {
-		return fmt.Errorf("statement %s already exists", statements.Name)
-	}
-	c.statements[statements.Name] = statements
-	return nil
-}
-
-func (c *Repository) Get(collectionName, statementName string) (string, error) {
-	if s, ok := c.statements[collectionName]; ok {
-		return s.Get(statementName)
-	}
-	return "", fmt.Errorf("collection %s not found", collectionName)
-}
-
-func (c *Repository) DbPrepare(db *sql.DB, collectionName, statementName string) (*sql.Stmt, error) {
+func loadFilesFromDir(f fs.FS, rootPath, dirName string) (collection, error) {
 	var err error
-	var statement string
+	var c = newCollection(dirName)
+	var fullPath = filepath.Join(rootPath, dirName)
 
-	if statement, err = c.Get(collectionName, statementName); err != nil {
-		return nil, err
+	var files []fs.DirEntry
+	if files, err = fs.ReadDir(f, fullPath); err != nil {
+		return c, err
 	}
 
-	return db.Prepare(statement)
-}
+	for _, file := range files {
+		if file.IsDir() {
+			return c, fmt.Errorf("nested directories are not supported, %s is a directory in %s", file.Name(), fullPath)
+		}
 
-func (c *Repository) TxPrepare(tx *sql.Tx, collectionName, statementName string) (*sql.Stmt, error) {
-	var err error
-	var statement string
+		var contents []byte
+		if contents, err = fs.ReadFile(f, filepath.Join(dirName, file.Name())); err != nil {
+			return c, fmt.Errorf("failed to read file %s from directory %s: %w", file.Name(), fullPath, err)
+		}
 
-	if statement, err = c.Get(collectionName, statementName); err != nil {
-		return nil, err
+		if err = c.add(dirName, string(contents)); err != nil {
+			return c, err
+		}
 	}
-
-	return tx.Prepare(statement)
+	return c, nil
 }
