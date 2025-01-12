@@ -12,8 +12,13 @@ Two examples are available in the [example](https://github.com/jantytgat/go-sql-
 
 ## Basics
 
-### Import
+### Add the package to your project
 
+```bash
+go get github.com/jantytgat/go-sql-queryrepo
+```
+
+### Import
 ```go
 import github.com/jantytgat/go -sql-queryrepo
 ```
