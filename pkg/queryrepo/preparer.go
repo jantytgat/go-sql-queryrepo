@@ -5,7 +5,7 @@ import (
 	"io/fs"
 )
 
-// Preparer defines the interface to create a prepared statement
+// Preparer defines the interface to create a prepared statement.
 type Preparer interface {
 	Prepare(query string) (*sql.Stmt, error)
 }
@@ -15,7 +15,7 @@ type Preparer interface {
 func Prepare[T Preparer](t T, r *Repository, collectionName, queryName string) (*sql.Stmt, error) {
 	var err error
 	var query string
-
+	
 	if query, err = r.Get(collectionName, queryName); err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func Prepare[T Preparer](t T, r *Repository, collectionName, queryName string) (
 func PrepareFromFs[T Preparer](t T, f fs.FS, rootPath, collectionName, queryName string) (*sql.Stmt, error) {
 	var err error
 	var query string
-
+	
 	if query, err = LoadQueryFromFs(f, rootPath, collectionName, queryName); err != nil {
 		return nil, err
 	}
