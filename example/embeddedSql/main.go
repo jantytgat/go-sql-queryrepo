@@ -34,7 +34,7 @@ func main() {
 	}
 
 	// Create query repository from embedded files
-	if r, err = queryrepo.NewFromFs(statementsFS); err != nil {
+	if r, err = queryrepo.NewFromFs(statementsFS, "assets/statements"); err != nil {
 		panic(err)
 	}
 	fmt.Println("")
