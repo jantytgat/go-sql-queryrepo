@@ -63,7 +63,7 @@ var f embed.FS
 // Create query repository from embedded files
 var r *queryrepo.Repository
 if r, err = queryrepo.NewFromFs(f, "assets/queries"); err != nil {
-panic(err)
+    panic(err)
 }
 ```
 
@@ -74,7 +74,7 @@ Now the repository has been initialized, we can get a query from a collection:
 ```go
 var query string
 if query, err = r.Get("collection1", "create"); err != nil {
-panic(err)
+    panic(err)
 }
 fmt.Println("Query:", query)
 ```
@@ -87,7 +87,7 @@ can do so as follows:
 ```go
 var query string
 if query, err = queryrepo.LoadQueryFromFs(f, "assets/queries", "collection2", "list"); err != nil {
-panic(err)
+    panic(err)
 }
 ```
 
@@ -98,7 +98,7 @@ long as a ```Preparer``` is passed into the functions.
 
 ```go
 type Preparer interface {
-Prepare(query string) (*sql.Stmt, error)
+	Prepare(query string) (*sql.Stmt, error)
 }
 ```
 For example:
@@ -111,7 +111,7 @@ For example:
 ```go
 var createStmt *sql.Stmt
 if createStmt, err = queryrepo.Prepare(db, r, "collection1", "create"); err != nil {
-panic(err)
+    panic(err)
 }
 ```
 
@@ -120,6 +120,6 @@ panic(err)
 ```go
 var createStmt *sql.Stmt
 if createStmt, err = queryrepo.PrepareFromFs(db, f, "assets/statements", "collection1", "create"); err != nil {
-panic(err)
+    panic(err)
 }
 ```
