@@ -122,7 +122,7 @@ if createStmt, err = queryrepo.Prepare(db, r, "collection1", "create"); err != n
 
 ```go
 var createStmt *sql.Stmt
-if createStmt, err = queryrepo.PrepareFromFs(db, f, "assets/statements", "collection1", "create"); err != nil {
+if createStmt, err = queryrepo.PrepareFromFs(db, f, "assets/queries", "collection1", "create"); err != nil {
     panic(err)
 }
 ```
