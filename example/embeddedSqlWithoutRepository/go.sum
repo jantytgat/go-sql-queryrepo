@@ -25,6 +25,8 @@ github.com/jantytgat/go-sql-queryrepo v0.1.2-0.20250112145543-683d812884df h1:S2
 github.com/jantytgat/go-sql-queryrepo v0.1.2-0.20250112145543-683d812884df/go.mod h1:RuX2EU9A2azS2gjW6uVcspc3rxnDn29zRvLKaPr4Zl0=
 github.com/jantytgat/go-sql-queryrepo v0.1.2-0.20250112145739-3aa04c982c9f h1:U62Xeaxd0y8ibQeQdSkKNA+gj+F5kYsmFVXgNx/cBrw=
 github.com/jantytgat/go-sql-queryrepo v0.1.2-0.20250112145739-3aa04c982c9f/go.mod h1:RuX2EU9A2azS2gjW6uVcspc3rxnDn29zRvLKaPr4Zl0=
+github.com/jantytgat/go-sql-queryrepo v0.1.2 h1:vi7B9qz9YDULxm/A3GFlZtfqHxyjN3O0tuoEL64xTCU=
+github.com/jantytgat/go-sql-queryrepo v0.1.2/go.mod h1:RuX2EU9A2azS2gjW6uVcspc3rxnDn29zRvLKaPr4Zl0=
 github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
 github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=

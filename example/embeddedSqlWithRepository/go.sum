@@ -15,14 +15,10 @@ github.com/hashicorp/go-multierror v1.1.1 h1:H5DkEtf6CXdFp0N0Em5UCwQpXMWke8IA0+l
 github.com/hashicorp/go-multierror v1.1.1/go.mod h1:iw975J/qwKPdAO1clOe2L8331t/9/fmwbPZ6JB6eMoM=
 github.com/hashicorp/golang-lru/v2 v2.0.7 h1:a+bsQ5rvGLjzHuww6tVxozPZFVghXaHOwFs4luLUK2k=
 github.com/hashicorp/golang-lru/v2 v2.0.7/go.mod h1:QeFd9opnmA6QUJc5vARoKUSoFhyfM2/ZepoAG6RGpeM=
-github.com/jantytgat/go-sql-queryrepo v0.1.1 h1:StG7mSLYIgBALTDF7aiAshXknHbBP3MdKua3FDN2hco=
-github.com/jantytgat/go-sql-queryrepo v0.1.1/go.mod h1:RuX2EU9A2azS2gjW6uVcspc3rxnDn29zRvLKaPr4Zl0=
-github.com/jantytgat/go-sql-queryrepo v0.1.2-0.20250112144621-d26003404c06 h1:or0oe13gee6aOO19NW5pe5/pbm+w8S+4KKrk9mqf3VU=
-github.com/jantytgat/go-sql-queryrepo v0.1.2-0.20250112144621-d26003404c06/go.mod h1:RuX2EU9A2azS2gjW6uVcspc3rxnDn29zRvLKaPr4Zl0=
-github.com/jantytgat/go-sql-queryrepo v0.1.2-0.20250112144804-486854385f51 h1:c6tMsLQ/ulN3EYAIOVqKh0hKTMY5kkXcv/4MdgiIJ9M=
-github.com/jantytgat/go-sql-queryrepo v0.1.2-0.20250112144804-486854385f51/go.mod h1:RuX2EU9A2azS2gjW6uVcspc3rxnDn29zRvLKaPr4Zl0=
 github.com/jantytgat/go-sql-queryrepo v0.1.2-0.20250112145739-3aa04c982c9f h1:U62Xeaxd0y8ibQeQdSkKNA+gj+F5kYsmFVXgNx/cBrw=
 github.com/jantytgat/go-sql-queryrepo v0.1.2-0.20250112145739-3aa04c982c9f/go.mod h1:RuX2EU9A2azS2gjW6uVcspc3rxnDn29zRvLKaPr4Zl0=
+github.com/jantytgat/go-sql-queryrepo v0.1.2 h1:vi7B9qz9YDULxm/A3GFlZtfqHxyjN3O0tuoEL64xTCU=
+github.com/jantytgat/go-sql-queryrepo v0.1.2/go.mod h1:RuX2EU9A2azS2gjW6uVcspc3rxnDn29zRvLKaPr4Zl0=
 github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
 github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
