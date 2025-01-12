@@ -102,12 +102,12 @@ func loadFilesFromDir(f fs.FS, rootPath, dirName string) (collection, error) {
 			return c, fmt.Errorf("nested directories are not supported, %s is a directory in %s", file.Name(), fullPath)
 		}
 
-		var contents []byte
-		if contents, err = fs.ReadFile(f, filepath.Join(fullPath, file.Name())); err != nil {
-			return c, fmt.Errorf("failed to read file %s from directory %s: %w", file.Name(), fullPath, err)
+		var contents string
+		if contents, err = LoadQueryFromFs(f, rootPath, dirName, strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))); err != nil {
+			return c, err
 		}
 
-		if err = c.add(strings.TrimSuffix(file.Name(), filepath.Ext(file.Name())), string(contents)); err != nil {
+		if err = c.add(strings.TrimSuffix(file.Name(), filepath.Ext(file.Name())), contents); err != nil {
 			return c, err
 		}
 	}
