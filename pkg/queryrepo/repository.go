@@ -3,8 +3,10 @@ package queryrepo
 
 import (
 	"database/sql"
+	"embed"
 	"fmt"
 	"io/fs"
+	"path"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -107,7 +109,15 @@ func loadFromFs(r *Repository, f fs.FS, rootPath string) error {
 func loadFilesFromDir(f fs.FS, rootPath, dirName string) (collection, error) {
 	var err error
 	var c = newCollection(dirName)
-	var fullPath = filepath.Join(rootPath, dirName)
+	var fullPath string
+	
+	switch f.(type) {
+	case embed.FS:
+		fullPath = path.Join(rootPath, dirName)
+	default:
+		fullPath = filepath.Join(rootPath, dirName)
+		
+	}
 	
 	var files []fs.DirEntry
 	if files, err = fs.ReadDir(f, fullPath); err != nil {

@@ -16,15 +16,14 @@ import (
 func LoadQueryFromFs(f fs.FS, rootPath, collectionName, queryName string) (string, error) {
 	var err error
 	var contents []byte
-	
 	switch f.(type) {
-	case fs.FS:
-		if contents, err = fs.ReadFile(f, filepath.Join(rootPath, collectionName, queryName)+".sql"); err != nil {
-			return "", fmt.Errorf("failed to read file %s: %w", filepath.Join(rootPath, collectionName, queryName)+".sql", err)
-		}
 	case embed.FS:
 		if contents, err = fs.ReadFile(f, path.Join(rootPath, collectionName, queryName)+".sql"); err != nil {
 			return "", fmt.Errorf("failed to read file %s: %w", path.Join(rootPath, collectionName, queryName)+".sql", err)
+		}
+	default:
+		if contents, err = fs.ReadFile(f, filepath.Join(rootPath, collectionName, queryName)+".sql"); err != nil {
+			return "", fmt.Errorf("failed to read file %s: %w", filepath.Join(rootPath, collectionName, queryName)+".sql", err)
 		}
 	}
 	return string(contents), nil
