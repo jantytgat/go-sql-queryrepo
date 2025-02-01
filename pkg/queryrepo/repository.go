@@ -2,8 +2,10 @@
 package queryrepo
 
 import (
+	"context"
 	"database/sql"
 	"embed"
+	"errors"
 	"fmt"
 	"io/fs"
 	"path"
@@ -14,12 +16,12 @@ import (
 
 // NewFromFs creates a new repository using a filesystem.
 // It takes a filesystem and a root path to start loading files from and returns an error if files cannot be loaded.
-func NewFromFs(fsys fs.FS, rootPath string) (*Repository, error) {
+func NewFromFs(f fs.FS, rootPath string) (*Repository, error) {
 	repo := &Repository{
 		queries: make(map[string]collection),
 	}
 	
-	return repo, loadFromFs(repo, fsys, rootPath)
+	return repo, loadFromFs(repo, f, rootPath)
 }
 
 // A Repository stores multiple collections of queries in a map for later use.
@@ -45,6 +47,26 @@ func (r *Repository) add(c collection) error {
 // DbPrepare creates a prepared statement for the supplied database handle.
 // It takes a collection name and query name to look up the query to create the prepared statement.
 func (r *Repository) DbPrepare(db *sql.DB, collectionName, queryName string) (*sql.Stmt, error) {
+	if db == nil {
+		return nil, errors.New("db is nil")
+	}
+	
+	var err error
+	var query string
+	
+	if query, err = r.Get(collectionName, queryName); err != nil {
+		return nil, err
+	}
+	return db.Prepare(query)
+}
+
+// DbPrepareContext creates a prepared statement for the supplied database handle using a context.
+// It takes a collection name and query name to look up the query to create the prepared statement.
+func (r *Repository) DbPrepareContext(ctx context.Context, db *sql.DB, collectionName, queryName string) (*sql.Stmt, error) {
+	if db == nil {
+		return nil, errors.New("db is nil")
+	}
+	
 	var err error
 	var query string
 	
@@ -52,7 +74,7 @@ func (r *Repository) DbPrepare(db *sql.DB, collectionName, queryName string) (*s
 		return nil, err
 	}
 	
-	return db.Prepare(query)
+	return db.PrepareContext(ctx, query)
 }
 
 // Get retrieves the supplied query from the repository.
@@ -71,6 +93,9 @@ func (r *Repository) Get(collectionName, queryName string) (string, error) {
 // TxPrepare creates a prepared statement for the supplied in-progress database transaction.
 // It takes a collection name and query name to look up the query to create the prepared statement.
 func (r *Repository) TxPrepare(tx *sql.Tx, collectionName, queryName string) (*sql.Stmt, error) {
+	if tx == nil {
+		return nil, errors.New("tx is nil")
+	}
 	var err error
 	var statement string
 	
@@ -81,9 +106,33 @@ func (r *Repository) TxPrepare(tx *sql.Tx, collectionName, queryName string) (*s
 	return tx.Prepare(statement)
 }
 
+// TxPrepare creates a prepared statement for the supplied in-progress database transaction using a context.
+// It takes a collection name and query name to look up the query to create the prepared statement.
+func (r *Repository) TxPrepareContext(ctx context.Context, tx *sql.Tx, collectionName, queryName string) (*sql.Stmt, error) {
+	if tx == nil {
+		return nil, errors.New("tx is nil")
+	}
+	var err error
+	var statement string
+	
+	if statement, err = r.Get(collectionName, queryName); err != nil {
+		return nil, err
+	}
+	
+	return tx.PrepareContext(ctx, statement)
+}
+
 // loadFromFs looks for directories in the root path to create collections for.
 // If a directory is found, it loads all the files in the subdirectory and adds the returned collection to the repository.
 func loadFromFs(r *Repository, f fs.FS, rootPath string) error {
+	if r == nil {
+		return errors.New("repository is nil")
+	}
+	
+	if f == nil {
+		return errors.New("filesystem is nil")
+	}
+	
 	var err error
 	var files []fs.DirEntry
 	if files, err = fs.ReadDir(f, rootPath); err != nil {
